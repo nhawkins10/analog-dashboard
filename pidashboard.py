@@ -6,12 +6,11 @@ import time
 import os
 
 def getWeather():	
-	#weather from file
-	dataFile = file('weather.json','r')
-	data = json.loads(dataFile.read())
+	#weather from file (used in testing)
+	#data = json.loads(dataFile.read())
 	
 	#weather from api ( https://api.forecast.io/forecast/19c800f33bf2003db19cc4aae7db507a/39.0932,-94.4156 )
-	#data = json.loads(urllib2.urlopen(" https://api.forecast.io/forecast/19c800f33bf2003db19cc4aae7db507a/39.0932,-94.4156").read())
+	data = json.loads(urllib2.urlopen(" https://api.forecast.io/forecast/19c800f33bf2003db19cc4aae7db507a/39.0932,-94.4156").read())
 	
 	currentTemp = int(round(data['currently']['temperature']))
 	currentIcon = data['currently']['icon']
@@ -66,7 +65,7 @@ def displayWeather(temp, icon):
 	
 def getSpeed():
 	print('getting connection speed...')
-	#os.system("python speedtest.py > speed.txt")
+	os.system("python speedtest.py > speed.txt")
 	dataFile = file("speed.txt", "r")
 	data = dataFile.read()
 	speed = int(round(float(data[data.find("Download: ") + len("Download: "):data.find("Testing upload speed")].split(" ")[0])))
