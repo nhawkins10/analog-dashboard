@@ -6,6 +6,7 @@ import time
 import os
 
 def getWeather():	
+	print('[log] getting weather...')
 	#weather from file (used in testing)
 	#data = json.loads(dataFile.read())
 	
@@ -64,7 +65,7 @@ def displayWeather(temp, icon):
 	
 	
 def getSpeed():
-	print('getting connection speed...')
+	print('[log] getting connection speed...')
 	os.system("python speedtest.py > speed.txt")
 	dataFile = file("speed.txt", "r")
 	data = dataFile.read()
@@ -80,8 +81,31 @@ def getSpeed():
 def displaySpeed(speed):
 	# servo control here for speed display
 	print(speed)
+	
+currentWeatherSwitch = True #GPIO.input(switch)
+speedSwitch = True #GPIO.input(knob_speed)
+counter = 60 #this loads everything on first run
 
-
-getWeather()
-getSpeed()
-#time.sleep(10)
+while True:
+	if counter == 60: #refresh everything every 5 minutes
+		print "[all refresh]", time.strftime("%m/%d/%Y %I:%M.%S")
+		getWeather()
+		getSpeed()
+		
+		counter = 0
+	else:
+		#check if weather switch has changed
+		if currentWeatherSwitch != True: #GPIO.input(switch):
+			print "[weather refresh]", time.strftime("%m/%d/%Y %I:%M.%S")
+			getWeather()
+			currentWeatherSwitch = True #GPIO.input(switch)
+		
+		#check if knob has changed to speed
+		if not speedSwitch and True: #GPIO.input(knob_speed) == True:
+			print "[speed refresh]", time.strftime("%m/%d/%Y %I:%M.%S")
+			getSpeed()
+			speedSwitch = True #GPIO.input(knob_speed)
+	
+		counter += 1
+		
+	time.sleep(5)
